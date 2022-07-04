@@ -1,6 +1,6 @@
 Spring Boot Microservices - V2
 
-## Spring and Spring Services Used: 
+## Spring and Spring Cloud Services Used: 
 1. Spring Cloud Config Server and Bus
 2. Load balancing with Ribbon and Feign (V2: Spring Cloud Load Balancer)
 3. Naming server with Eureka
@@ -37,23 +37,29 @@ spring.cloud.config.server.git.password=GIT_PASSWORD
 ```
 3. Now enable SpringCloudConfig Server using ```@EnableConfigServer```
 
-## Ports
-
-|     Application       |     Port          |
-| ------------- | ------------- |
-| Limits Service | 8080, 8081, ... |
-| Spring Cloud Config Server | 8888 |
-
-
 ## URLs
-### Limits Service
+### Limits Service (Ports: 8080, 8081)
 - http://localhost:8080/limits/hardcoded/
 - http://localhost:8080/limits/properties/
+- http://localhost:8081/limits/hardcoded/
+- http://localhost:8081/limits/properties/
 
-### Cloud Config Server
+### Cloud Config Server (Ports: 8888)
 - http://localhost:8888/LIMITS-SERVICE/default
 - http://localhost:8888/LIMITS-SERVICE/dev
 - http://localhost:8888/LIMITS-SERVICE/qa
 - http://localhost:8888/LIMITS-SERVICE/stag
 - http://localhost:8888/LIMITS-SERVICE/prod
 
+### Currency Exchange Service (Ports: 8000, 8001)
+- http://localhost:8000/currency-exchange/from/USD/to/INR
+- http://localhost:8001/currency-exchange/from/EUR/to/INR
+
+### Currency Conversion Service (Ports: 8100, 8101)
+- http://localhost:8100/currency-conversion-rest-template/from/USD/to/INR/quantity/10
+- http://localhost:8100/currency-conversion-feign/from/USD/to/INR/quantity/10
+- http://localhost:8101/currency-conversion-rest-template/from/USD/to/INR/quantity/100
+- http://localhost:8101/currency-conversion-feign/from/USD/to/INR/quantity/100
+
+### Eureka (Ports: 8761)
+- http://localhost:8761/
