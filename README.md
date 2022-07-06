@@ -25,6 +25,15 @@
 2. Dynamic scaling
 3. Faster release cycle
 
+
+## Server starting sequence:
+1. naming-server
+2. limits-service
+3. spring-cloud-config-server
+4. currency-conversion-microservice
+5. currency-exchange-microservice
+6. api-gateway-service
+
 ---------------
 
 ## Microservice Details:
@@ -114,6 +123,35 @@ eureka.client.instance.preferIpAddress=true
 2. We can have logging/tracing class of all the incoming request class e.g. ```by implementing GlobalFilter interface```
 
 ---------------
+### Configuring Distributed Tracing With Sleuth (for unique ID across all microservices), Zipkin (for dashboard/UI) and RabbitMQ/Kafka (for Asynchronous call)
+**_Steps_**:
+1. Add all 3 dependencies in pom.xml of all the microservices for which we need to enable tracing.
+```
+<!-- Dependency for Sleuth -->
+<dependency>
+   <groupId>org.springframework.cloud</groupId>
+   <artifactId>spring-cloud-starter-sleuth</artifactId>
+</dependency>
+<!-- Dependency for integrating Sleuth with Zipkin -->
+<dependency>
+   <groupId>org.springframework.cloud</groupId>
+   <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+</dependency>
+<!-- Dependency for Integrating RabbitMQ -->
+<dependency>
+   <groupId>org.springframework.amqp</groupId>
+   <artifactId>spring-rabbit</artifactId>
+</dependency>
+```
+2. Add a Sample bean in Application.java
+```
+@Bean
+public Sampler defaultSampler() {
+  return Sampler.ALWAYS_SAMPLE;
+}
+```
+3. Restart all the registered servers and verify
+---------------
 
 ### Limits Service (Ports: 8080, 8081)
 
@@ -124,11 +162,11 @@ eureka.client.instance.preferIpAddress=true
 
 ### Cloud Config Server (Ports: 8888)
 
-- http://localhost:8888/LIMITS-SERVICE/default
-- http://localhost:8888/LIMITS-SERVICE/dev
-- http://localhost:8888/LIMITS-SERVICE/qa
-- http://localhost:8888/LIMITS-SERVICE/stag
-- http://localhost:8888/LIMITS-SERVICE/prod
+- http://localhost:8888/limits-service/default
+- http://localhost:8888/limits-service/dev
+- http://localhost:8888/limits-service/qa
+- http://localhost:8888/limits-service/stag
+- http://localhost:8888/limits-service/prod
 
 ### Currency Exchange Service (Ports: 8000, 8001)
 
@@ -176,7 +214,7 @@ spring.cloud.gateway.discovery.locator.lowerCaseServiceId=true
 ```
 
 - http://localhost:8765/currency-exchange/from/USD/to/INR
-- http://localhost:8765/currency-conversion/from/USD/to/INR/quantity/10
+- http://localhost:8765/currency-conversion-rest-template/from/USD/to/INR/quantity/10
 - http://localhost:8765/currency-conversion-feign/from/USD/to/INR/quantity/10
 - http://localhost:8765/currency-conversion-new/from/USD/to/INR/quantity/10
 
